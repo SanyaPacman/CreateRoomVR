@@ -1,0 +1,78 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlaceWalls : MonoBehaviour
+{
+
+    [SerializeField]
+    private GameObject wall;
+    private Camera cam;
+    private GameObject[] pointsForPlace;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        cam = Camera.main;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //PlaceWall();
+    }
+    public void MoveWall()
+    {
+        pointsForPlace = GameObject.FindGameObjectsWithTag("PlacePoint");
+        if (cam == null)
+        {
+            Debug.Log("Camera not found");
+            return;
+        }
+        RaycastHit hit;
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            //wall.transform.position = hit.point;
+            //wall.transform.position = findNearestTarget(wall,pointsForPlace).transform.position;
+            wall.transform.position = findNearestTarget(hit.point, pointsForPlace).transform.position;
+        }
+    }
+    public void  PlaceWall()
+    {
+        Instantiate(wall, wall.transform.position, wall.transform.rotation);
+    }
+    private GameObject findNearestTarget(Vector3 position, GameObject[] targets)
+    {
+        
+        GameObject nearestGO = targets[0];
+        float minimumDistance = Vector3.Distance(nearestGO.transform.position, position);
+        for (int i = 1; i < targets.Length; i++)
+        {
+            float curDistance= Vector3.Distance(targets[i].transform.position, position);
+            if (minimumDistance> curDistance)
+            {
+                minimumDistance = curDistance;
+                nearestGO = targets[i];
+            }
+        }
+        return nearestGO;
+    }
+    private GameObject findNearestTarget(GameObject go, GameObject[] targets)
+    {
+
+        GameObject nearestGO = targets[0];
+        float minimumDistance = Vector3.Distance(nearestGO.transform.position, go.transform.position);
+        for (int i = 1; i < targets.Length - 1; i++)
+        {
+            float curDistance = Vector3.Distance(targets[i].transform.position, go.transform.position);
+            if (minimumDistance > curDistance)
+            {
+                minimumDistance = curDistance;
+                nearestGO = targets[i];
+            }
+        }
+        return nearestGO;
+    }
+}

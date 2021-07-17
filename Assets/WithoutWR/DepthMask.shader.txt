@@ -1,0 +1,7 @@
+Shader "Holes/Depth Mask" {
+	SubShade {
+		Tags{"Queue" = "Geometry-1" }
+		ColorMask 0
+		ZWrite On
+		Pass{}
+}
